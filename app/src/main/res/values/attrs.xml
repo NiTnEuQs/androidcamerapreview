@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CameraPreview">
+        <attr name="placeholder" format="reference" />
+        <attr name="placeholderPadding" format="dimension" />
+        <attr name="placeholderTint" format="color" />
+        <attr name="sourcePadding" format="dimension" />
+        <attr name="sourceTint" format="color" />
+        <attr name="enableDeleteButton" format="boolean" />
+        <attr name="enableActionButton" format="boolean" />
+        <attr name="enableTakePhotoButton" format="boolean" />
+        <attr name="actionButtonDrawable" format="reference" />
+        <attr name="deleteButtonDrawable" format="reference" />
+    </declare-styleable>
+</resources>

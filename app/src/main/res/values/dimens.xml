@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Margin/Padding sizes -->
+    <dimen name="margin_padding_xxsmall">2dp</dimen>
+    <dimen name="margin_padding_xsmall">4dp</dimen>
+    <dimen name="margin_padding_small">8dp</dimen>
+    <dimen name="margin_padding_med_small">12dp</dimen>
+    <dimen name="margin_padding_medium">16dp</dimen>
+    <dimen name="margin_padding_med_large">24dp</dimen>
+    <dimen name="margin_padding_large">32dp</dimen>
+    <dimen name="margin_padding_xlarge">64dp</dimen>
+    <dimen name="margin_padding_xxlarge">128dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text_xxsmall">4sp</dimen>
+    <dimen name="text_xsmall">8sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_medium">16sp</dimen>
+    <dimen name="text_med_large">18sp</dimen>
+    <dimen name="text_large">20sp</dimen>
+    <dimen name="text_xlarge">24sp</dimen>
+    <dimen name="text_xxlarge">28sp</dimen>
+    <dimen name="text_xxxlarge">32sp</dimen>
+</resources>
