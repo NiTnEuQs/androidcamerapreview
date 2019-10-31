@@ -141,7 +141,7 @@ public class CameraPreview extends LinearLayout {
                     if (resultCode == Activity.RESULT_OK) {
                         if (data != null && data.getData() != null) {
                             sourceUri = data.getData();
-                            if (sourceUri != null) {
+                            if (sourceUri != null && sourceUri.getPath() != null) {
                                 sourceFile = new File(sourceUri.getPath());
                             }
                         }
