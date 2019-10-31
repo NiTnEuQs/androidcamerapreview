@@ -62,24 +62,24 @@ public class CameraPreview extends LinearLayout {
     public CameraPreview(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        createView(context, attrs);
+        createView(attrs);
     }
 
-    private void createView(Context context, AttributeSet attrs) {
-        parentView = inflate(context, R.layout.component_camera_preview, this);
+    private void createView(AttributeSet attrs) {
+        parentView = inflate(getContext(), R.layout.component_camera_preview, this);
 
         imgPreview = findViewById(R.id.imgPreview);
         btnAction = findViewById(R.id.btnAction);
         btnDelete = findViewById(R.id.btnDelete);
 
-        initializeData(context, attrs);
+        initializeData(attrs);
         initializeFirst();
         initializeView();
         initializeListeners();
     }
 
-    private void initializeData(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CameraPreview);
+    private void initializeData(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CameraPreview);
         attrPlaceHolder = typedArray.getResourceId(R.styleable.CameraPreview_placeholder, -1);
         attrPlaceHolderPadding = typedArray.getDimension(R.styleable.CameraPreview_placeholderPadding, 0.0f);
         attrPlaceHolderTint = typedArray.getColor(R.styleable.CameraPreview_placeholderTint, getContext().getResources().getColor(android.R.color.white));
@@ -123,28 +123,35 @@ public class CameraPreview extends LinearLayout {
 
     private void initializeListeners() {
         if (attrEnableTakePhotoButton) {
-            imgPreview.setOnClickListener(view -> startCameraActivity());
+            imgPreview.setOnClickListener(view -> startPickImageActivity());
         }
         btnAction.setOnClickListener(view -> actionOnImage());
         btnDelete.setOnClickListener(view -> deleteImage());
     }
 
-    public void startCameraActivity() {
-        final String TAG_FRAGMENT_CAMERA = "CameraPreviewView";
-        final int REQUEST_CODE_CAMERA = 3333;
+    public void startPickImageActivity() {
+        final String TAG_PICK_IMAGE = "PickImage";
+        final int REQUEST_CODE_PICK_IMAGE = 3333;
 
         final FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
         fr.dtrx.androidcore.fragments.ActivityResultFragment auxiliary = new fr.dtrx.androidcore.fragments.ActivityResultFragment();
         auxiliary.setActivityResultListener((requestCode, resultCode, data) -> {
             switch (requestCode) {
-                case REQUEST_CODE_CAMERA: {
+                case REQUEST_CODE_PICK_IMAGE: {
                     if (resultCode == Activity.RESULT_OK) {
+                        if (data != null && data.getData() != null) {
+                            sourceUri = data.getData();
+                            if (sourceUri != null) {
+                                sourceFile = new File(sourceUri.getPath());
+                            }
+                        }
+
                         onCameraResult();
                     }
                 }
             }
         });
-        fm.beginTransaction().add(auxiliary, TAG_FRAGMENT_CAMERA).commit();
+        fm.beginTransaction().add(auxiliary, TAG_PICK_IMAGE).commit();
         fm.executePendingTransactions();
 
         PermissionManager.Builder()
@@ -153,9 +160,19 @@ public class CameraPreview extends LinearLayout {
                 .callback(allPermissionsGranted -> {
                     if (allPermissionsGranted) {
                         if (initializeSourceUri()) {
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, sourceUri);
-                            auxiliary.startActivityForResult(intent, REQUEST_CODE_CAMERA);
+                            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                            getIntent.setType("image/*");
+
+                            Intent cameraIntent = new Intent(Intent.ACTION_PICK);
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, sourceUri);
+
+                            Intent pickIntent = new Intent(Intent.ACTION_PICK);
+                            pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+
+                            Intent chooserIntent = Intent.createChooser(getIntent, "Choisir une image");
+                            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent, cameraIntent});
+
+                            auxiliary.startActivityForResult(chooserIntent, REQUEST_CODE_PICK_IMAGE);
                         }
                     }
                 })
