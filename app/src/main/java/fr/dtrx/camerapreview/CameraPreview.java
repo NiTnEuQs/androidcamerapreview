@@ -163,7 +163,7 @@ public class CameraPreview extends LinearLayout {
                             Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             getIntent.setType("image/*");
 
-                            Intent cameraIntent = new Intent(Intent.ACTION_PICK);
+                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, sourceUri);
 
                             Intent pickIntent = new Intent(Intent.ACTION_PICK);
